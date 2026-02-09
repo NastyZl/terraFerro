@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚒️ Терра-Ферро: Приключения Сережи</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(to bottom, #8B4513 0%, #D2B48C 50%, #228B22 100%);
+            color: #2F4F2F;
+            margin: 0;
+            padding: 15px;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 100%;
+            background: rgba(255, 248, 220, 0.95);
+            border: 4px solid #DAA520;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #B8860B;
+            font-size: 2em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin: 0 0 15px 0;
+        }
+        
+        .hero-name {
+            text-align: center;
+            font-size: 1.3em;
+            color: #8B4513;
+            font-weight: bold;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #FFD700, #DAA520);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .illustration {
+            font-size: 3.5em;
+            text-align: center;
+            margin: 20px 0;
+            animation: hammer 2s infinite;
+        }
+        
+        @keyframes hammer {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(10deg); }
+            75% { transform: rotate(-10deg); }
+        }
+        
+        h2 {
+            color: #8B4513;
+            border-bottom: 3px solid #DAA520;
+            padding-bottom: 8px;
+            font-size: 1.5em;
+        }
+        
+        .exercise {
+            background: #F0E68C;
+            border-left: 6px solid #FFD700;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 12px;
+            position: relative;
+        }
+        
+        .exercise h3 {
+            color: #B8860B;
+            margin-top: 0;
+        }
+        
+        .tg-btn {
+            background: linear-gradient(45deg, #DAA520, #B8860B);
+            color: #2F4F2F;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1em;
+            font-weight: bold;
+            border-radius: 20px;
+            cursor: pointer;
+            margin: 10px 5px 0 0;
+            box-shadow: 0 4px 12px rgba(218,165,32,0.4);
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        .tg-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(218,165,32,0.6);
+        }
+        
+        .narrator {
+            font-style: italic;
+            color: #556B2F;
+            font-size: 1.1em;
+            text-align: center;
+            padding: 15px;
+            background: rgba(144,238,144,0.3);
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .progress {
+            background: #D2B48C;
+            height: 8px;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s;
+            border-radius: 10px;
+        }
+        
+        #mainButton {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+        
+        .score {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .back-btn {
+            position: fixed;
+            top: 70px;
+            left: 15px;
+            background: rgba(139,69,19,0.9);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="score" id="score">⚒️ 0/3</div>
+    
+    <button class="back-btn" id="backBtn">↩️ Назад</button>
+    
+    <div class="container">
+        <h1>🌍 Терра-Ферро 🌍</h1>
+        <div class="hero-name" id="heroName">Смелый воин Серёжа</div>
+        
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div class="illustration">⚒️🏔️</div>
+        
+        <div class="narrator" id="story">
+            Жил-был в стране Терра-Ферро мальчик Серёжа. Злой дракон Ржавчина защемил Великий Нерв Земли! Король-Железный зовёт тебя на подвиг!
+        </div>
+        
+        <div id="exercises">
+            <!-- Упражнения добавляются динамически -->
+        </div>
+        
+        <div class="narrator" id="finalStory" style="display: none;">
+            🎉 Серёжа победил дракона! Терра-Ферро спасена! Ты настоящий герой земли и железа! 
+            Делай упражнения каждый день — и сила всегда будет с тобой! ⚒️🏆
+        </div>
+    </div>
+
+    <div id="mainButton"></div>
+
+    <script>
+        // Инициализация Telegram Web App
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+        
+        // Данные пользователя
+        const user = tg.initDataUnsafe?.user;
+        const heroName = document.getElementById('heroName');
+        if (user) {
+            heroName.textContent = `Смелый воин ${user.first_name || 'Серёжа'}!`;
+        }
+        
+        // Прогресс и счет
+        let progress = 0;
+        let score = 0;
+        const totalExercises = 3;
+        const scoreEl = document.getElementById('score');
+        const progressBar = document.getElementById('progressBar');
+        
+        // Упражнения
+        const exercises = [
+            {
+                title: '🦵 Растяжка Грушевидной Пещеры',
+                desc: 'Ляг на спину. Правую лодыжку на левое колено, тяни бедро к груди. 30 сек. Обе стороны.',
+                story: 'Серёжа растянул цепи дракона! Нерв начинает дышать!'
+            },
+            {
+                title: '🌉 Мостик Силы Ягодиц',
+                desc: 'Ляг, ноги согни. Подними таз, сжимая ягодицы. 5 сек, 10 раз.',
+                story: 'Ведьма Гниль отступает! Ягодицы как железо Терра-Ферро!'
+            },
+            {
+                title: '😺 Кошачий Изгиб',
+                desc: 'На четвереньках. Вдох — выгни спину, выдох — прогни. 10 раз.',
+                story: 'Дракон в панике! Великий Нерв освободился!'
+            }
+        ];
+        
+        // MainButton Telegram
+        const mainBtn = tg.MainButton;
+        mainBtn.setText('🏆 Получить медаль героя!');
+        mainBtn.hide();
+        mainBtn.onClick(finalVictory);
+        
+        // BackButton
+        tg.BackButton.show();
+        tg.BackButton.onClick(() => tg.Close());
+        
+        // Создание упражнений
+        function createExercises() {
+            const container = document.getElementById('exercises');
+            exercises.forEach((exercise, index) => {
+                const div = document.createElement('div');
+                div.className = 'exercise';
+                div.innerHTML = `
+                    <h3>${exercise.title}</h3>
+                    <p>${exercise.desc}</p>
+                    <button class="tg-btn" onclick="completeExercise(${index})">
+                        ⚒️ Выполнить испытание!
+                    </button>
+                    <div class="narrator" style="display: none;">${exercise.story}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+        
+        // Завершение упражнения
+        window.completeExercise = function(index) {
+            tg.HapticFeedback.impactOccurred('medium');
+            tg.showAlert('Отлично! ' + exercises[index].story);
+            
+            score++;
+            progress = (score / totalExercises) * 100;
+            
+            scoreEl.textContent = `⚒️ ${score}/${totalExercises}`;
+            progressBar.style.width = progress + '%';
+            
+            if (score >= totalExercises) {
+                victory();
+            }
+        };
+        
+        // Победа!
+        function victory() {
+            document.getElementById('story').style.display = 'none';
+            document.getElementById('exercises').style.display = 'none';
+            document.getElementById('finalStory').style.display = 'block';
+            mainBtn.setText('🎖️ Я герой Терра-Ферро!');
+            mainBtn.show();
+            tg.HapticFeedback.notificationOccurred('success');
+        }
+        
+        // Финальная победа
+        function finalVictory() {
+            tg.showShareMenu({
+                text: `Я победил дракона Ржавчину в Терра-Ферро! ⚒️🏆 
+                Попробуй и ты: ${window.location.href}`,
+                title: 'Серёжа-герой Терра-Ферро!'
+            });
+            tg.HapticFeedback.notificationOccurred('success');
+        }
+        
+        // Инициализация
+        createExercises();
+        
+        // Кнопка обратной связи
+        const feedbackBtn = document.createElement('button');
+        feedbackBtn.textContent = '⭐ Оставить отзыв';
+        feedbackBtn.className = 'tg-btn';
+        feedbackBtn.style.marginTop = '20px';
+        feedbackBtn.onclick = () => {
+            tg.showShareMenu({
+                text: `Супер сказка про Терра-Ферро! Серёжа победил защемление нерва! 
+                ${window.location.href}`
+            });
+        };
+        document.querySelector('.container').appendChild(feedbackBtn);
+    </script>
+</body>
+</html>
